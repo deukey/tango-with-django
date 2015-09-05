@@ -1,6 +1,8 @@
+# -*- coding: utf-8 -*-
+
 from django.shortcuts import render, get_object_or_404
 from .models import Category, Page
-from .forms import CategoryForm
+from .forms import CategoryForm, PageForm
 
 
 def index(request):
@@ -15,8 +17,9 @@ def about(request):
 
 
 def category(request, category_name_slug):
-    category = get_object_or_404(Category, slug=category_name_slug)
-    return render(request, 'rango/category.html', {'category': category})
+    cat = get_object_or_404(Category, slug=category_name_slug)
+    context_dict = {'category': cat, 'cat_slug': category_name_slug}
+    return render(request, 'rango/category.html', context_dict)
 
 
 def add_category(request):
@@ -25,7 +28,7 @@ def add_category(request):
 
         if form.is_valid():
             form.save()
-            return index(request)
+            return index(request) # 리다이렉트로 바꿔
         else:
             print form.errors
 
@@ -33,3 +36,28 @@ def add_category(request):
         form = CategoryForm()
 
     return render(request, 'rango/add_category.html', {'form': form})
+
+
+def add_page(request, category_name_slug):
+    try:
+        cat = Category.objects.get(slug=category_name_slug)
+    except Category.DoesNotExist:
+        cat = None
+
+    if request.method == 'POST':
+        form = PageForm(request.POST)
+        if form.is_valid():
+            if cat:
+                page = form.save(commit=False)
+                page.category = cat
+                page.views = 0
+                page.save()
+                return category(request, category_name_slug) # 리다이렉트로 바꿔
+        else:
+            print form.errors
+    else:
+        form = PageForm()
+
+    context_dict = {'form': form, 'category': cat}
+
+    return render(request, 'rango/add_page.html', context_dict)
