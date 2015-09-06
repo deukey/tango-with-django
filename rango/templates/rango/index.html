@@ -6,7 +6,7 @@
     <h2>Top Categories</h2>
     <ul>
     {% for category in top_categories %}
-        <li><a href="/rango/category/{{ category.slug }}">{{ category.name }}</a></li>
+        <li><a href="{% url 'category' category.slug %}">{{ category.name }}</a></li>
     {% empty %}
         <strong>There are no categories present.</strong>
     {% endfor %}
@@ -19,5 +19,5 @@
         <strong>보여줄 페이지가 없네요.</strong>
     {% endfor %}
     </ul>
-    <a href="/rango/add_category/">Add a New Category</a><br />
+    <a href="{% url 'add_category' %}">Add a New Category</a><br />
 {% endblock content %}

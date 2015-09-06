@@ -10,5 +10,5 @@
         <strong>No pages currently in category.</strong>
     {% endfor %}
     </ul>
-    <a href="/rango/category/{{ cat_slug }}/add_page/">Add a New Page</a>
+    <a href="{% url 'add_page' cat_slug %}">Add a New Page</a>
 {% endblock content %}

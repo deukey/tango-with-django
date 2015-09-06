@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from .models import Category, Page
 from .forms import CategoryForm, PageForm
 
@@ -28,7 +28,7 @@ def add_category(request):
 
         if form.is_valid():
             form.save()
-            return index(request) # 리다이렉트로 바꿔
+            return redirect('rango.views.index')
         else:
             print form.errors
 
@@ -52,7 +52,7 @@ def add_page(request, category_name_slug):
                 page.category = cat
                 page.views = 0
                 page.save()
-                return category(request, category_name_slug) # 리다이렉트로 바꿔
+                return redirect('rango.views.category', category_name_slug=category_name_slug)
         else:
             print form.errors
     else:

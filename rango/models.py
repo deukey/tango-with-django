@@ -44,7 +44,7 @@ class Page(models.Model):
     # 즉 'Category'라고 넣어도 됨. 이게 유용할 때는 정의되지 않은 모델을 넣을 때와, 다른 앱의 모델을 넣을 때
     # 다른 앱의 모델을 넣을 때는 'otherapp.Category' 이런 식으로...
     title = models.CharField(max_length=128)
-    url = models.URLField()
+    url = models.URLField(max_length=200)
     views = models.IntegerField(default=0)
 
     def __str__(self):
