@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.db import models
-from django.utils.text import slugify
+# from django.utils.text import slugify
 
 
 class Category(models.Model):
@@ -8,30 +8,6 @@ class Category(models.Model):
     views = models.IntegerField(default=0)
     likes = models.IntegerField(default=0)
     slug = models.SlugField(unique=True)
-
-    def save(self, *args, **kwargs):
-        slugged_name = slugify(self.name)
-        if slugged_name != '':
-            try:
-                Category.objects.get(slug=slugged_name)
-            except Category.DoesNotExist:
-                self.slug = slugged_name
-            else:
-                num = 0
-                while True:
-                    new_name = slugged_name
-                    try:
-                        num += 1
-                        new_name += str(num)
-                        Category.objects.get(slug=new_name)
-                    except Category.DoesNotExist:
-                        print new_name
-                        self.slug = new_name
-                        break
-        else:
-            print "Generated slug is an empty string. Anyway, I will save!!!"
-            self.slug = slugged_name
-        super(Category, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.name

@@ -3,6 +3,7 @@
 from django import forms
 from .models import Category, Page
 from django.core.exceptions import ValidationError
+from django.utils.text import slugify
 
 
 def validate_can_make_slug(value):
@@ -10,12 +11,14 @@ def validate_can_make_slug(value):
         value.decode('ascii')
     # 한글을 걸러내기 위해서는 요게 필요
     except UnicodeDecodeError:
-        raise ValidationError('영문이나 숫자가 하나라도 포함되어야 합니다.')
+        raise ValidationError('영문을 제외한 문자는 사용할 수 없어요.')
     else:
         if not any(c.isalnum() for c in value):
             raise ValidationError('영문이나 숫자가 하나라도 포함되어야 합니다.')
     # 이 방식만으로는 한글은 걸러내지 못함(아마도 파일 맨 위의 인코딩 선언 때문인듯)
     # 그래서 try except가 필요
+
+    # TODO: 현재 버그 존재(한글+영문일 경우 제대로 동작 안함)
 
 
 # def validate_unique_slug(value):
@@ -37,10 +40,11 @@ class CategoryForm(forms.ModelForm):
     name = forms.CharField(help_text="카테고리 이름을 넣으세요(영문, 숫자만 가능).",
                            validators=[validate_can_make_slug],
                            error_messages=korean_error_messages)
-    # slug = forms.SlugField(widget=forms.HiddenInput(), required=False,
-    #                        validators=[validate_unique_slug])
     # validators= 인자를 넣으려는 경우에는 이런 식으로 필드를 따로 정의하는 수 밖에 없음
     # 즉 class Meta로는 다른 인자들은 모두 정의 가능하지만 validators 인자는 불가능
+
+    slug = forms.SlugField(widget=forms.HiddenInput(), required=False)
+    # 정의한 이유는 하단에서 설명(fields 정의에서)
 
     # views = forms.IntegerField(widget=forms.HiddenInput(), initial=0)
     # likes = forms.IntegerField(widget=forms.HiddenInput(), initial=0)
@@ -60,9 +64,35 @@ class CategoryForm(forms.ModelForm):
     #         self._errors['name'] = '영문이나 숫자가 하나라도 포함되어야 합니다.'
     #         return False
 
+    def clean(self):
+        cleaned_data = super(CategoryForm, self).clean()
+        slugged_name = slugify(cleaned_data.get('name'))
+
+        if slugged_name != '':
+            try:
+                Category.objects.get(slug=slugged_name)
+            except Category.DoesNotExist:
+                cleaned_data['slug'] = slugged_name
+            else:
+                num = 0
+                while True:
+                    new_name = slugged_name
+                    try:
+                        num += 1
+                        new_name += str(num)
+                        Category.objects.get(slug=new_name)
+                    except Category.DoesNotExist:
+                        cleaned_data['slug'] = new_name
+                        break
+
+        return cleaned_data
+    # http://stackoverflow.com/questions/18371457/modelform-override-clean-method 참조
+
     class Meta:
         model = Category
-        fields = ('name',)
+        fields = ('name', 'slug',)
+        # 여기에 include 되지 않은 모델들은 clean() 과정을 거치지 않고 저장됨
+        # 따라서 clean()을 통하여 데이터 후처리를 하기 위해서는 여기에 해당 모델을 반드시 정의해야 함
 
 
 class PageForm(forms.ModelForm):
