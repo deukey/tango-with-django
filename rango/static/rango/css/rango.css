@@ -2,7 +2,11 @@ body {
     padding-left: 15px;
 }
 
-ul.errorlist {
+li {
+    font-family: "Bitstream Vera Sans Mono", Monaco, "Courier New", Courier, monospace;
+}
+
+ul .errorlist {
     margin: 0;
     padding: 0;
 }
