@@ -102,13 +102,14 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
-#deu: http://blog.hannal.com/2015/04/start_with_django_webframework_06/ 참조할것
-STATIC_URL = '/static/' #deu: 서버에 올린 경우에는 이 경로로 파일에 접근 가능하면 안됨!!! 나중에 수정할 것
+# deu: http://blog.hannal.com/2015/04/start_with_django_webframework_06/ 참조할것
+STATIC_URL = '/static/' # TODO: 서버에 올린 경우에는 이 경로로 파일에 접근 가능하면 안됨!!! 나중에 수정할 것
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-#MEDIA_URL = '/media/'
-#MEDIA_ROOT = os.path.join(BASE_DIR, 'rango/media')
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'rango/media/rango')
 
+LOGIN_URL = '/rango/login/'
 
 import dj_database_url
 DATABASES['default'] = dj_database_url.config()

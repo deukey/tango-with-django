@@ -14,6 +14,9 @@
         <link rel="stylesheet" href="{% static "rango/css/rango.css" %}">
     </head>
     <body>
+        {% if user.is_authenticated %}
+            <h1>Welcome {{ user.username }}</h1>
+        {% endif %}
         {% block content %}
         {% endblock content %} {# endblock의 경우 블럭네임(content)를 안써도 되지만 쓰는 것이 명료함 #}
         <p><a href = "{% url 'index' %}">Index Page</a></p>

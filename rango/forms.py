@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from django import forms
-from .models import Category, Page
+from .models import Category, Page, UserProfile
+from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.utils.text import slugify
 
@@ -100,15 +101,16 @@ class PageForm(forms.ModelForm):
     # url = forms.URLField(max_length=200, help_text="페이지의 URL을 넣으세요.")
     # views = forms.IntegerField(widget=forms.HiddenInput(), initial=0)
 
-    def clean(self):
-        cleaned_data = super(PageForm, self).clean()
-        url = cleaned_data.get('url')
-
-        if url and not url.startswith('http://'):
-            url = 'http://' + url
-            cleaned_data['url'] = url
-
-        return cleaned_data
+    # def clean(self):
+    #     cleaned_data = super(PageForm, self).clean()
+    #     url = cleaned_data.get('url')
+    #
+    #     if url and not url.startswith('http://'):
+    #         url = 'http://' + url
+    #         cleaned_data['url'] = url
+    #
+    #     return cleaned_data
+    # 이거 안 넣어도 자동으로 처리됨
 
     class Meta:
         model = Page
@@ -123,3 +125,25 @@ class PageForm(forms.ModelForm):
             'url': korean_error_messages
         }
 
+
+class PageEditForm(forms.ModelForm):
+    class Meta:
+        model = Page
+        fields = ('title', 'url', 'category',)
+
+
+class UserForm(forms.ModelForm):
+    # password = forms.CharField(widget=forms.PasswordInput)
+
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'password',)
+        widgets = {
+            'password': forms.PasswordInput,
+        }
+
+
+class UserProfileForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ('website', 'picture',)
