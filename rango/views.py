@@ -14,35 +14,40 @@ def index(request):
     page_list = Page.objects.order_by('-views')[:5]
     context_dict = {'top_categories': category_list, 'top_pages': page_list}
 
-    visits = int(request.COOKIES.get('visits', '1'))
+    visits = request.session.get('visits')
+    if not visits:
+        visits = 1
 
     reset_last_visit_time = False
 
-    if 'last_visit' in request.COOKIES:
-        last_visit = request.COOKIES['last_visit']
+    last_visit = request.session.get('last_visit')
+
+    if last_visit:
         last_visit_time = datetime.strptime(last_visit[:-7], "%Y-%m-%d %H:%M:%S")
 
         if (datetime.now() - last_visit_time).seconds > 5:
             visits += 1
             reset_last_visit_time = True
 
-        context_dict['visits'] = visits
-        response = render(request, 'rango/index.html', context_dict)
-
     else:
         reset_last_visit_time = True
-        context_dict['visits'] = visits
-        response = render(request, 'rango/index.html', context_dict)
 
     if reset_last_visit_time:
-        response.set_cookie('last_visit', datetime.now())
-        response.set_cookie('visits', visits)
+        request.session['last_visit'] = str(datetime.now())
+        request.session['visits'] = visits
 
-    return response
+    context_dict['visits'] = visits
+
+    return render(request,'rango/index.html', context_dict)
 
 
 def about(request):
-    return render(request, 'rango/about.html', {})
+    if request.session.get('visits'):
+        count = request.session.get('visits')
+    else:
+        count = 0
+
+    return render(request, 'rango/about.html', {'visits': count})
 
 
 def category(request, category_name_slug):
