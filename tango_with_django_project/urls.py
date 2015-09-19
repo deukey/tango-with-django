@@ -21,4 +21,5 @@ from django.contrib import admin
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^rango/', include('rango.urls')),
-]#+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    url(r'^accounts/', include('registration.backends.simple.urls')),
+]
