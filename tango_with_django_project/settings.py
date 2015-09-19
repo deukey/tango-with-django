@@ -38,6 +38,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     'rango',
     'registration'
 )
@@ -109,6 +110,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'rango/media/rango')
+
+SITE_ID = 1
 
 # registraion-redux settings
 REGISTRATION_OPEN = True                # If True, users can register
