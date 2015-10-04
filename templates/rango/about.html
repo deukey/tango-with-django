@@ -1,19 +1,18 @@
-<!DOCTYPE html>
+{% extends 'base.html' %}
 
 {% load staticfiles %}
 
-<html>
+{% block title %}About{% endblock title %}
 
-    <head>
-        <title>Rango about</title>
-    </head>
+{% block body_block %}
+    <div class="page-header">
+        <h1>About</h1>
+    </div>
+    <div>
+        <p>This is <strong>Deu's Rango</strong> page.</p>
+        <p>You have visited {{ visits }} time(s).</p>
 
-    <body>
-        <p>You have visited {{ visits }} times.</p>
-        <h1>Rango says...</h1>
-        About<br />
-        <a href="{% url 'index' %}">Home</a><br />
-        <img src="{% static "rango/images/minions1.jpg" %}" alt="Picture of Minions" /> <!-- New line -->
-    </body>
+        <img width="400" src="{% static "rango/images/minions1.jpg" %}" alt="Picture of Minions" />
+    </div>
+{% endblock body_block %}
 
-</html>

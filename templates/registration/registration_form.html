@@ -1,10 +1,41 @@
-{% extends "rango/base.html" %}
+{% extends "base.html" %}
 
-{% block content %}
-    <h1>Register Here</h1>
-    <form method="post" action=".">
+{% block body_block %}
+    <form class="form-horizontal" role="form" id="category_form" method="POST" action=".">
+        <h2 class="form-signin-heading">회원 가입</h2>
         {% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" value="Submit" />
+        <div class="form-group">
+            <label for="id_username" class="control-label col-sm-3">Username:</label>
+            <div class="col-sm-9">
+                <input type="text" name="username" class="form-control" id="id_username" placeholder="Enter Username">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="id_email" class="col-sm-3 control-label">E-mail:</label>
+
+            <div class="col-sm-9">
+                <input type="email" name="email" class="form-control" id="id_email" placeholder="Enter email">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="id_password1" class="col-sm-3 control-label">Password:</label>
+
+            <div class="col-sm-9">
+                <input type="password" name="password1" class="form-control" id="id_password1" placeholder="Enter password">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="id_password2" class="col-sm-3 control-label">Password(again):</label>
+
+            <div class="col-sm-9">
+                <input type="password" name="password2" class="form-control" id="id_password2" placeholder="Enter password again">
+            </div>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Submit</button>
+        
     </form>
-{% endblock content %}
+{% endblock body_block %}

@@ -1,8 +1,8 @@
-{% extends "rango/base.html" %}
+{% extends "base.html" %}
 
 {% block title %}{{ category.name }}{% endblock title %}
 
-{% block content %}
+{% block body_block %}
     <h1>{{ category.name }}</h1>
     <ul>
     {% for page in category.pages.all %}
@@ -19,4 +19,4 @@
         <a href="{% url 'edit_category' cat_slug %}">Edit this category</a><br />
         <a href="{% url 'add_page' cat_slug %}">Add a New Page</a>
     {% endif %}
-{% endblock content %}
+{% endblock body_block %}

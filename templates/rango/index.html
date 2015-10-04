@@ -1,34 +1,47 @@
-{% extends "rango/base.html" %}
+{% extends "base.html" %}
 
-{% block content %}
-    <h1>Rango says.. hello world!</h1>
-    <h2>Top Categories</h2>
-    <ul>
-    {% for category in top_categories %}
-        <li><a href="{% url 'category' category.slug %}">{{ category.name }}</a></li>
-    {% empty %}
-        <strong>There are no categories present.</strong>
-    {% endfor %}
-    </ul>
-    <h2>Top Pages</h2>
-    <ul>
-    {% for page in top_pages %}
-        <li><a href="{{ page.url }}">{{ page.title }}</a></li>
-    {% empty %}
-        <strong>보여줄 페이지가 없네요.</strong>
-    {% endfor %}
-    </ul>
+{% block title %}Index{% endblock title %}
 
-    {% if user.is_authenticated %}
-        <a href="{% url 'add_category' %}">Add a New Category</a><br />
-        <a href="{% url 'restricted' %}">Restricted Page</a><br />
-        <a href="{% url 'auth_password_change' %}">암호 변경</a><br />
-        <a href="{% url 'auth_logout' %}?next={% url 'index' %}">Logout</a><br />
-    {% else %}
-        <a href="{% url 'registration_register' %}">Register Here</a><br />
-        <a href="{% url 'auth_login' %}">Login</a><br />
-    {% endif %}
+{% block body_block %}
+    <div class="page-header">
+        {% if user.is_authenticated %}
+            <h1>Rango says.. hello {{ user.username }}!</h1>
+        {% else %}
+            <h1>Rango says.. hello world!</h1>
+        {% endif %}
+    </div>
+    <div class="row placeholders">
+        <div class="col-xs-12 col-sm-6 placeholder">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Top Categories</h3>
+                </div>
+            </div>
+            <ul class="list-group">
+                {% for category in top_categories %}
+                    <li class="list-group-item"><a href="{% url 'category' category.slug %}">{{ category.name }}</a></li>
+                {% empty %}
+                    <strong>There are no categories present.</strong>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="col-xs-12 col-sm-6 placeholder">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Top Pages</h3>
+                </div>
+            </div>
+            <ul class="list-group">
+                {% for page in top_pages %}
+                    <li class="list-group-item"><a href="{{ page.url }}">{{ page.title }}</a></li>
+                {% empty %}
+                    <strong>보여줄 페이지가 없네요.</strong>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
 
     <p>visits: {{ visits }}</p>
 
-{% endblock content %}
+{% endblock body_block %}
